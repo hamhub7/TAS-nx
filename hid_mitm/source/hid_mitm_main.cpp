@@ -25,6 +25,12 @@
 #include "hid_mitm_service.hpp"
 #include "hid_mitm_iappletresource.hpp"
 #include "hid_custom.h"
+#include "udp_input.h"
+
+//Define dynamic script array
+//struct input_msg *script = new struct input_msg[];
+
+Event vsync_event;
 
 extern "C" {
     extern u32 __start__;
@@ -103,6 +109,7 @@ void __appInit(void) {
     if (R_FAILED(rc))
         fatalSimple(rc);
     
+    fsdevMountSdmc(); 
 }
 
 void __appExit(void) {
@@ -112,6 +119,26 @@ void __appExit(void) {
     smExit();
     timeExit();
 }
+
+/*
+void structStore()
+{
+    struct input_msg msg_ZL;
+    msg_ZL.magic = INPUT_MSG_MAGIC;
+    msg_ZL.keys = KEY_ZL;
+    msg_ZL.joy_l_x = 0;
+    msg_ZL.joy_l_y = 0;
+    msg_ZL.joy_r_x = 0;
+    msg_ZL.joy_r_y = 0;
+
+    struct input_msg msg_Y;
+    msg_Y.magic = INPUT_MSG_MAGIC;
+    msg_Y.keys = KEY_Y;
+    msg_Y.joy_l_x = 0;
+    msg_Y.joy_l_y = 0;
+    msg_Y.joy_r_x = 0;
+    msg_Y.joy_r_y = 0;
+}*/
 
 struct HidManagerOptions {
     static const size_t PointerBufferSize = 0x100;
@@ -123,9 +150,24 @@ using HidMitmManager = WaitableManager<HidManagerOptions>;
 
 int main(int argc, char **argv)
 {
+    Result rc = viInitialize(ViServiceType_System);
+    if(R_FAILED(rc))
+        fatalSimple(rc);
+
+    ViDisplay disp;
+    rc = viOpenDefaultDisplay(&disp);
+    if(R_FAILED(rc))
+        fatalSimple(rc);
+    rc = viGetDisplayVsyncEvent(&disp, &vsync_event);
+    if(R_FAILED(rc))
+        fatalSimple(rc);
+
     consoleDebugInit(debugDevice_SVC);
     customHidInitialize();
     copyThreadInitialize();
+
+    FILE *file = fopen("sdmc:/debuglog.txt", "a");
+    dup2(fileno(file), STDOUT_FILENO);
 
     /* TODO: What's a good timeout value to use here? */
     auto server_manager = new HidMitmManager(1);
@@ -139,4 +181,3 @@ int main(int argc, char **argv)
     delete server_manager;
     return 0;
 }
-

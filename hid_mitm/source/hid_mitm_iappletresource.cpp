@@ -30,6 +30,12 @@ static std::vector<std::pair<u64, u64>> rebind_config;
 static Mutex configMutex, pkgMutex;
 static struct input_msg cur_fakegamepad_state = {0};
 
+//Add frame counter and bool
+int frames = 0;
+bool on = false;
+
+extern Event vsync_event;
+
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
 {
     mutexLock(&shmem_mutex);
@@ -151,48 +157,27 @@ void rebind_keys(int gamepad_ind)
         if (curTmpEnt->connectionState == 0)
             continue;
 
-        if (rebind_config.size() > 0)
+        if(((curTmpEnt->buttons) & KEY_DLEFT) && !on)
         {
-            u64 buttons = 0;
-
-            for (auto it = rebind_config.begin(); it != rebind_config.end(); it++)
+            on = true;
+            frames = 0;
+        }
+        
+        if(on)
+        {
+            switch (frames)
             {
-                if (curTmpEnt->buttons & it->first)
-                {
-                    buttons |= it->second;
-                }
-            }
-
-            // lstick rstick stuff
-            for (int i = 0; i < JOYSTICK_NUM_STICKS; i++)
-            {
-                if (pow(curTmpEnt->joysticks[i].dx, 2) + pow(curTmpEnt->joysticks[i].dy, 2) <= pow(stick_deadzone, 2))
-                {
-                    curTmpEnt->joysticks[i].dx = 0;
-                    curTmpEnt->joysticks[i].dy = 0;
-
-                    // Stick digital stuff
-                    for (int j = 16; j <= 19; j++)
-                    {
-                        buttons &= ~BIT(j + i * 4); // Unset each bit
-                    }
-                }
-                else
-                {
-                    // Stick digital stuff
-                    for (int j = 16; j <= 19; j++)
-                    {
-                        buttons |= curTmpEnt->buttons & BIT(j + i * 4); // Set each bit if it was originally set
-                    }
-                }
-            }
-
-            // sl sr stuff
-            for (int i = 24; i <= 27; i++)
-            {
-                buttons |= curTmpEnt->buttons & BIT(i);
-            }
-            curTmpEnt->buttons = buttons;
+                case 0:
+                    (curTmpEnt->buttons) |= KEY_ZL;
+                    break;
+                case 1:
+                    (curTmpEnt->buttons) |= KEY_Y;
+                    break;
+                default:
+                    frames = 0;
+                    on = false;
+                    break;
+            }               
         }
     }
     mutexUnlock(&configMutex);
@@ -265,30 +250,15 @@ void shmem_copy(HidSharedMemory *source, HidSharedMemory *dest)
 
 void net_thread(void* _)
 {
-    struct input_msg tmp_pkg;
-    while (true)
-    {
-        if (networking_enabled)
-        {
-            int poll_res = poll_udp_input(&tmp_pkg);
+    printf("framesb: %i", frames);
 
-            mutexLock(&pkgMutex);
-            if (poll_res == 0)
-            {
-                cur_fakegamepad_state = tmp_pkg;
-            }
-            else
-            {
-                cur_fakegamepad_state.magic = 0;
-                svcSleepThread(1e+7l);
-            }
-            mutexUnlock(&pkgMutex);
+    Result rc = eventWait(&vsync_event, 0xFFFFFFFFFFF);
+    if(R_FAILED(rc))
+        fatalSimple(rc);
 
-            svcSleepThread(-1);
-        } else {
-            svcSleepThread(1e+9l);
-        }
-    }
+    ++frames;
+
+    printf("framesa: %i", frames);
 }
 
 #define WANT_TIME 96000
@@ -296,7 +266,7 @@ void net_thread(void* _)
 
 void copy_thread(void* _)
 {
-    Result rc;
+    //Result rc;
 
     /*rc = viInitialize(ViServiceType_System);
     if (R_FAILED(rc))
