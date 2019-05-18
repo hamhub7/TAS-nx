@@ -253,15 +253,11 @@ void net_thread(void* _)
 {
     while(true)
     {
-        printf("framesb: %i", frames);
-
         Result rc = eventWait(&vsync_event, 0xFFFFFFFFFFF);
         if(R_FAILED(rc))
             fatalSimple(rc);
 
         ++frames;
-
-        printf("framesa: %i", frames);
     }
 }
 
