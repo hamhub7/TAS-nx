@@ -31,6 +31,7 @@
 //struct input_msg *script = new struct input_msg[];
 
 Event vsync_event;
+std::string script[47];
 
 extern "C" {
     extern u32 __start__;
@@ -140,6 +141,18 @@ void structStore()
     msg_Y.joy_r_y = 0;
 }*/
 
+void initScript()
+{
+    for(int i = 0; i < 47; ++i)
+        script[i] = " ";
+
+    script[0] = "KEY_ZL";
+    script[1] = "KEY_B";
+    script[28] = "KEY_ZL";
+    script[29] = "KEY_B";
+    script[46] = "KEY_Y";
+}
+
 struct HidManagerOptions {
     static const size_t PointerBufferSize = 0x100;
     static const size_t MaxDomains = 4;
@@ -150,6 +163,8 @@ using HidMitmManager = WaitableManager<HidManagerOptions>;
 
 int main(int argc, char **argv)
 {
+    initScript();
+
     Result rc = viInitialize(ViServiceType_System);
     if(R_FAILED(rc))
         fatalSimple(rc);

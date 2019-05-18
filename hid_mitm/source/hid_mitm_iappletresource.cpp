@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <math.h>
+#include <cstring>
+#include <iterator>
 #include "ini.h"
 #include "hid_custom.h"
 #include "udp_input.h"
@@ -35,6 +37,7 @@ int frames = 0;
 bool on = false;
 
 extern Event vsync_event;
+extern std::string script[];
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
 {
@@ -162,23 +165,19 @@ void rebind_keys(int gamepad_ind)
             on = true;
             frames = 0;
         }
-        
+
         if(on)
         {
-            switch (frames)
+            if(frames < 47)
             {
-                case 0:
-                    (curTmpEnt->buttons) |= KEY_ZL;
-                    break;
-                case 1:
-                    (curTmpEnt->buttons) |= KEY_Y;
-                    break;
-                default:
-                    if(!((curTmpEnt->buttons) & KEY_DLEFT))
-                        on = false;
-
-                    break;
-            }               
+                if(script[frames] != " ")
+                    (curTmpEnt->buttons) |= get_key_ind(script[frames]);
+            }
+            else
+            {
+                frames = 0;
+                on = false;
+            } 
         }
     }
     mutexUnlock(&configMutex);
