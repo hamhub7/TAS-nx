@@ -38,6 +38,7 @@ bool on = false;
 
 extern Event vsync_event;
 extern std::string script[];
+extern int scriptLength;
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
 {
@@ -168,7 +169,7 @@ void rebind_keys(int gamepad_ind)
 
         if(on)
         {
-            if(frames < 47)
+            if(frames < scriptLength)
             {
                 if(script[frames] != " ")
                     (curTmpEnt->buttons) |= get_key_ind(script[frames]);

@@ -31,6 +31,7 @@
 //struct input_msg *script = new struct input_msg[];
 
 Event vsync_event;
+int scriptLength = 47;
 std::string script[47];
 
 extern "C" {
@@ -143,7 +144,7 @@ void structStore()
 
 void initScript()
 {
-    for(int i = 0; i < 47; ++i)
+    for(int i = 0; i < scriptLength; ++i)
         script[i] = " ";
 
     script[0] = "KEY_ZL";
