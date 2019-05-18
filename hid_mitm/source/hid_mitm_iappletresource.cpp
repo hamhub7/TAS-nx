@@ -174,8 +174,9 @@ void rebind_keys(int gamepad_ind)
                     (curTmpEnt->buttons) |= KEY_Y;
                     break;
                 default:
-                    frames = 0;
-                    on = false;
+                    if(!((curTmpEnt->buttons) & KEY_DLEFT))
+                        on = false;
+
                     break;
             }               
         }
@@ -250,15 +251,18 @@ void shmem_copy(HidSharedMemory *source, HidSharedMemory *dest)
 
 void net_thread(void* _)
 {
-    printf("framesb: %i", frames);
+    while(true)
+    {
+        printf("framesb: %i", frames);
 
-    Result rc = eventWait(&vsync_event, 0xFFFFFFFFFFF);
-    if(R_FAILED(rc))
-        fatalSimple(rc);
+        Result rc = eventWait(&vsync_event, 0xFFFFFFFFFFF);
+        if(R_FAILED(rc))
+            fatalSimple(rc);
 
-    ++frames;
+        ++frames;
 
-    printf("framesa: %i", frames);
+        printf("framesa: %i", frames);
+    }
 }
 
 #define WANT_TIME 96000
