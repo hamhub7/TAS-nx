@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <string>
+#include <vector>
 #include <switch.h>
 
 struct controlMsg

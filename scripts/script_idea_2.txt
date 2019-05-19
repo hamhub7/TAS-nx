@@ -1,0 +1,44 @@
+{
+frame: 0
+keys: KEY_ZL
+joy_x_l: 0
+joy_y_l: 0
+joy_x_r: 0
+joy_y_r: 0
+}
+
+{
+frame: 1
+keys: KEY_B
+joy_x_l: 0
+joy_y_l: 0
+joy_x_r: 0
+joy_y_r: 0
+}
+
+{
+frame: 28
+keys: KEY_ZL
+joy_x_l: 0
+joy_y_l: 0
+joy_x_r: 0
+joy_y_r: 0
+}
+
+{
+frame: 29
+keys: KEY_B
+joy_x_l: 0
+joy_y_l: 0
+joy_x_r: 0
+joy_y_r: 0
+}
+
+{
+frame: 46
+keys: KEY_Y
+joy_x_l: 0
+joy_y_l: 0
+joy_x_r: 0
+joy_y_r: 0
+}

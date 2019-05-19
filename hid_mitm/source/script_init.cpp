@@ -6,10 +6,10 @@
 
 #include "script_init.hpp"
 
-int scriptLength = 34;
-struct controlMsg script[34];
+int scriptLength = 47;
+std::vector<struct controlMsg> script(scriptLength);
 
-/*void nutClip()
+void nutClip()
 {
     //Length 47
     script[0].keys = KEY_ZL;
@@ -17,9 +17,9 @@ struct controlMsg script[34];
     script[28].keys = KEY_ZL;
     script[29].keys = KEY_B;
     script[46].keys = KEY_Y;
-}*/
+}
 
-void spinPound()
+/*void spinPound()
 {
     //Length 34
     script[0].joy_l_x = 30000;
@@ -71,7 +71,7 @@ void spinPound()
     script[31].joy_l_x = 30000;
     script[32].keys = KEY_B;
     script[33].keys = KEY_ZL;
-}
+}*/
 
 void initScript()
 {
@@ -90,5 +90,5 @@ void initScript()
     for(int i = 0; i < scriptLength; ++i)
         script[i].joy_r_y = 0;
 
-    spinPound();
+    nutClip();
 }

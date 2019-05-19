@@ -38,7 +38,7 @@ int frames = 0;
 bool on = false;
 
 extern Event vsync_event;
-extern struct controlMsg script[];
+extern std::vector<struct controlMsg> script;
 extern int scriptLength;
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
