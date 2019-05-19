@@ -11,6 +11,7 @@
 #include "ini.h"
 #include "hid_custom.h"
 #include "udp_input.h"
+#include "script_init.hpp"
 
 #include "hid_mitm_iappletresource.hpp"
 
@@ -37,7 +38,7 @@ int frames = 0;
 bool on = false;
 
 extern Event vsync_event;
-extern std::string script[];
+extern struct controlMsg script[];
 extern int scriptLength;
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
@@ -171,8 +172,11 @@ void rebind_keys(int gamepad_ind)
         {
             if(frames < scriptLength)
             {
-                if(script[frames] != " ")
-                    (curTmpEnt->buttons) |= get_key_ind(script[frames]);
+                (curTmpEnt->buttons) |= script[frames].keys;
+                (curTmpEnt->joysticks[0].dx) = script[frames].joy_l_x;
+                (curTmpEnt->joysticks[0].dy) = script[frames].joy_l_y;
+                (curTmpEnt->joysticks[1].dx) = script[frames].joy_r_x;
+                (curTmpEnt->joysticks[1].dy) = script[frames].joy_r_y;
             }
             else
             {

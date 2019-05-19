@@ -26,13 +26,14 @@
 #include "hid_mitm_iappletresource.hpp"
 #include "hid_custom.h"
 #include "udp_input.h"
+#include "script_init.hpp"
 
 //Define dynamic script array
 //struct input_msg *script = new struct input_msg[];
 
 Event vsync_event;
-int scriptLength = 47;
-std::string script[47];
+extern struct controlMsg script[];
+extern int scriptLength;
 
 extern "C" {
     extern u32 __start__;
@@ -141,18 +142,6 @@ void structStore()
     msg_Y.joy_r_x = 0;
     msg_Y.joy_r_y = 0;
 }*/
-
-void initScript()
-{
-    for(int i = 0; i < scriptLength; ++i)
-        script[i] = " ";
-
-    script[0] = "KEY_ZL";
-    script[1] = "KEY_B";
-    script[28] = "KEY_ZL";
-    script[29] = "KEY_B";
-    script[46] = "KEY_Y";
-}
 
 struct HidManagerOptions {
     static const size_t PointerBufferSize = 0x100;
