@@ -2,12 +2,15 @@
 #include <cstdlib>
 #include <cstdint>
 #include <string>
+#include <cstdlib>
 #include <switch.h>
 
 #include "script_init.hpp"
 
 int scriptLength = 47;
 std::vector<struct controlMsg> script(scriptLength);
+
+extern FILE *file;
 
 void nutClip()
 {
@@ -73,6 +76,51 @@ void nutClip()
     script[33].keys = KEY_ZL;
 }*/
 
+std::string keyDef[] = {"KEY_A", "KEY_B", "KEY_X", "KEY_Y", "KEY_LSTICK", "KEY_RSTICK", "KEY_L", "KEY_R", "KEY_ZL", "KEY_ZR", "KEY_PLUS", "KEY_MINUS", "KEY_DLEFT", "KEY_DUP", "KEY_DRIGHT", "KEY_DDOWN"};
+
+u64 translateKey(std::string str)
+{
+    for (u64 i = 0; i < sizeof(keyDef) / sizeof(char *); i++)
+    {
+        if (str == keyDef[i])
+        {
+            return BIT(i);
+        }
+    }
+    return 0;
+}
+
+void getScriptLines()
+{
+    std::ifstream ifs("sdmc:/script.txt");
+
+    if(ifs.good())
+    {
+        int index = 0;
+        std::string templine;
+        while(std::getline(ifs, templine))
+        {
+            templine.pop_back();
+
+            if(templine != "\n")
+            {
+                char tempc[] = templine.c_str();
+
+                u64 keys = translateKey(templine);
+                script[index].keys = keys;
+            }
+
+            ++index;
+        }
+        ifs.close();
+
+    }
+    else
+    {
+        fatalSimple(0x000f);
+    }
+}
+
 void initScript()
 {
     for(int i = 0; i < scriptLength; ++i)
@@ -90,5 +138,5 @@ void initScript()
     for(int i = 0; i < scriptLength; ++i)
         script[i].joy_r_y = 0;
 
-    nutClip();
+    getScriptLines();
 }

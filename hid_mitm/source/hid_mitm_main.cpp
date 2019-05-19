@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <cstring>
 #include <malloc.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include <switch.h>
 #include <stratosphere.hpp>
@@ -28,10 +30,8 @@
 #include "udp_input.h"
 #include "script_init.hpp"
 
-//Define dynamic script array
-//struct input_msg *script = new struct input_msg[];
-
 Event vsync_event;
+FILE *file;
 extern struct controlMsg script[];
 extern int scriptLength;
 
@@ -171,8 +171,7 @@ int main(int argc, char **argv)
     customHidInitialize();
     copyThreadInitialize();
 
-    FILE *file = fopen("sdmc:/debuglog.txt", "a");
-    dup2(fileno(file), STDOUT_FILENO);
+    file = fopen("sdmc:/debuglog.txt", "w");
 
     /* TODO: What's a good timeout value to use here? */
     auto server_manager = new HidMitmManager(1);

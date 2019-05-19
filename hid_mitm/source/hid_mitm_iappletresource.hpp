@@ -8,6 +8,7 @@ void clearConfig();
 void copyThreadInitialize();
 void add_shmem(u64 pid, SharedMemory* real_shmem, SharedMemory* fake_shmem);
 void del_shmem(u64 pid);
+s64 get_key_ind(std::string str);
 
 enum IAppletResourceCmd : u32 {
     IAppletResource_GetSharedMemoryHandle = 0

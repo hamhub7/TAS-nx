@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 #include <switch.h>
 
 struct controlMsg
@@ -15,5 +17,7 @@ struct controlMsg
     s32 joy_r_x;
     s32 joy_r_y;
 };
+
+void getScriptLines();
 
 void initScript();
