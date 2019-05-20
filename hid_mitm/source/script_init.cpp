@@ -101,13 +101,37 @@ void getScriptLines()
         while(std::getline(ifs, templine))
         {
             templine.pop_back();
+            std::string frameStr;
+            std::string keyStr;
 
             if(templine != "\n")
             {
-                char tempc[] = templine.c_str();
+                for(long unsigned i = 0;i < templine.length();++i)
+                {
+                    if(templine[i] == ' ')
+                    {
+                        frameStr = templine.substr(0,i);
+                        keyStr = templine.substr(i+1);
+                    }
+                }
 
-                u64 keys = translateKey(templine);
-                script[index].keys = keys;
+                u64 keys = 0;
+                long unsigned int prev = 0;
+
+                for(long unsigned i = 0;i < keyStr.length();++i)
+                {
+                    if((templine[i] == '&'))
+                    {
+                        keys |= translateKey(templine.substr(prev,i));
+                        prev = i+1;
+                    }
+
+                    keys |= translateKey(templine.substr(i+1));
+                }
+
+                //u64 keys = translateKey(keyStr);
+                int activeFrame = std::stoi(frameStr);
+                script[activeFrame].keys = keys;
             }
 
             ++index;

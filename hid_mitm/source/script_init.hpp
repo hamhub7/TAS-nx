@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <switch.h>
 
 struct controlMsg
