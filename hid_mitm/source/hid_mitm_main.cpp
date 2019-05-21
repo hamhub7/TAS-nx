@@ -90,12 +90,6 @@ void __appInit(void) {
     rc = smInitialize();
     if (R_FAILED(rc))
         fatalSimple(rc);
-    rc = fsInitialize();
-    if (R_FAILED(rc))
-        fatalSimple(rc);
-    rc = fsdevMountSdmc();
-    if (R_FAILED(rc))
-        fatalSimple(rc);
     rc = timeInitialize();
     if (R_FAILED(rc))
         fatalSimple(rc);
@@ -108,9 +102,7 @@ void __appInit(void) {
     
     rc = socketInitialize(&sockInitConf);
     if (R_FAILED(rc))
-        fatalSimple(rc);
-    
-    fsdevMountSdmc(); 
+        fatalSimple(rc); 
 }
 
 void __appExit(void) {
@@ -151,10 +143,16 @@ using HidMitmManager = WaitableManager<HidManagerOptions>;
 
 int main(int argc, char **argv)
 {
-    Result rc = viInitialize(ViServiceType_System);
-    if(R_FAILED(rc))
+    Result rc = fsInitialize();
+    if (R_FAILED(rc))
+        fatalSimple(rc);
+    rc = fsdevMountSdmc();
+    if (R_FAILED(rc))
         fatalSimple(rc);
 
+    rc = viInitialize(ViServiceType_System);
+    if(R_FAILED(rc))
+        fatalSimple(rc);
     ViDisplay disp;
     rc = viOpenDefaultDisplay(&disp);
     if(R_FAILED(rc))
