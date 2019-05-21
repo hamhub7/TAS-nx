@@ -1,9 +1,0 @@
-{frame: 0} {keys: KEY_ZL}
-
-{frame: 1} {keys: KEY_B}
-
-{frame: 28} {keys: KEY_ZL}
-
-{frame: 29} {keys: KEY_B}
-
-{frame: 46} {keys: KEY_Y}

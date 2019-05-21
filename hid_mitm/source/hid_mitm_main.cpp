@@ -32,8 +32,6 @@
 
 Event vsync_event;
 FILE *file;
-extern struct controlMsg script[];
-extern int scriptLength;
 
 extern "C" {
     extern u32 __start__;
@@ -153,8 +151,6 @@ using HidMitmManager = WaitableManager<HidManagerOptions>;
 
 int main(int argc, char **argv)
 {
-    initScript();
-
     Result rc = viInitialize(ViServiceType_System);
     if(R_FAILED(rc))
         fatalSimple(rc);
@@ -171,7 +167,10 @@ int main(int argc, char **argv)
     customHidInitialize();
     copyThreadInitialize();
 
-    file = fopen("sdmc:/debuglog.txt", "w");
+    file = fopen("sdmc:/debuglog.txt", "wt");
+    fprintf(file, "Opened\n");
+
+    initScript();
 
     /* TODO: What's a good timeout value to use here? */
     auto server_manager = new HidMitmManager(1);
