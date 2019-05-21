@@ -95,37 +95,24 @@ void getScriptLines()
             std::string lStickStr;
             std::string rStickStr;
 
-            if(templine != "\n")
+            if(templine != "")
             {
-                //separate the frame
-                for(long unsigned i = 0;i < templine.length();++i)
-                {
-                    if(templine[i] == ' ')
-                    {
-                        frameStr = templine.substr(0,i);
-                        std::string keyStickStr = templine.substr(i+1);
 
-                        //separate the keys
-                        for(long unsigned i = 0;i < keyStickStr.length();++i)
-                        {
-                            if(keyStickStr[i] == ' ')
-                            {
-                                keyStr = keyStickStr.substr(0,i);
-                                std::string stickStr = keyStickStr.substr(i+1);
+                //separate right joy
+                /*std:: size_t foundR = keyStr.find_last_of(" ");
+                rStickStr = templine.substr(foundR+1);
+                templine.resize(foundR);
 
-                                //separate left and right sticks
-                                for(long unsigned i = 0;i < stickStr.length();++i)
-                                {
-                                    if(stickStr[i] == ' ')
-                                    {
-                                        lStickStr = stickStr.substr(0,i);
-                                        rStickStr = stickStr.substr(i+1);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                //separate left joy
+                std:: size_t foundL = keyStr.find_last_of(" ");
+                lStickStr = templine.substr(foundL+1);
+                templine.resize(foundL);*/
+
+                //separate keys and frame
+                std:: size_t foundK = keyStr.find_last_of(" ");
+                keyStr = templine.substr(foundK+1);
+                templine.resize(foundK);
+                frameStr = templine;
 
                 //get keys
                 u64 keys = 0;
