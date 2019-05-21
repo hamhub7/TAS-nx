@@ -50,48 +50,6 @@ void getScriptLines()
             int activeFrame = std::stoi(frameStr);
             script[activeFrame].keys = keys;
         }
-
-
-        /*
-        std::string templine;
-        while(std::getline(ifs, templine))
-        {
-            templine.pop_back(); //remove newline
-            std::string frameStr, keyStr;
-
-            for(long unsigned i = 0;i < templine.length();++i)
-            {
-                if(templine[i] == ' ')
-                {
-                    frameStr = templine.substr(0,i);
-                    keyStr = templine.substr(i+1);
-                }
-            }
-
-            //separate keys and frame
-            
-            std:: size_t foundK = keyStr.find_last_of(" ");
-            keyStr = templine.substr(foundK+1);
-            templine.resize(foundK);
-            frameStr = templine;
-            
-
-            //get keys
-            u64 keys = 0;
-            while(keyStr.find_last_of(";") != std::string::npos)
-            {
-                std::size_t found = keyStr.find_last_of(";");
-                std::string latestKey = keyStr.substr(found+1);
-                keys |= translateKey(latestKey);
-                keyStr.resize(found);
-            }
-            keys |= translateKey(keyStr);
-
-            //deposit found values into the script
-            int activeFrame = std::stoi(frameStr);
-            script[activeFrame].keys = keys;
-        }
-        */
         ifs.close();
 
     }
