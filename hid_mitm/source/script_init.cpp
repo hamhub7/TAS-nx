@@ -12,16 +12,6 @@ std::vector<struct controlMsg> script(scriptLength);
 
 extern FILE *file;
 
-void nutClip()
-{
-    //Length 47
-    script[0].keys = KEY_ZL;
-    script[1].keys = KEY_B;
-    script[28].keys = KEY_ZL;
-    script[29].keys = KEY_B;
-    script[46].keys = KEY_Y;
-}
-
 /*void spinPound()
 {
     //Length 34
@@ -79,7 +69,7 @@ void nutClip()
 std::string keyDef[] = {"KEY_A", "KEY_B", "KEY_X", "KEY_Y", "KEY_LSTICK", "KEY_RSTICK", "KEY_L", "KEY_R", "KEY_ZL", "KEY_ZR", "KEY_PLUS", "KEY_MINUS", "KEY_DLEFT", "KEY_DUP", "KEY_DRIGHT", "KEY_DDOWN"};
 
 u64 translateKey(std::string str)
-{
+{  
     for (u64 i = 0; i < sizeof(keyDef) / sizeof(char *); i++)
     {
         if (str == keyDef[i])
@@ -87,7 +77,7 @@ u64 translateKey(std::string str)
             return BIT(i);
         }
     }
-    return 0;
+    return static_cast<u64>(0);
 }
 
 void getScriptLines()
@@ -96,45 +86,90 @@ void getScriptLines()
 
     if(ifs.good())
     {
-        int index = 0;
         std::string templine;
         while(std::getline(ifs, templine))
         {
-            templine.pop_back();
+            templine.pop_back(); //remove newline
             std::string frameStr;
             std::string keyStr;
+            std::string lStickStr;
+            std::string rStickStr;
 
             if(templine != "\n")
             {
+                //separate the frame
                 for(long unsigned i = 0;i < templine.length();++i)
                 {
                     if(templine[i] == ' ')
                     {
                         frameStr = templine.substr(0,i);
-                        keyStr = templine.substr(i+1);
+                        std::string keyStickStr = templine.substr(i+1);
+
+                        //separate the keys
+                        for(long unsigned i = 0;i < keyStickStr.length();++i)
+                        {
+                            if(keyStickStr[i] == ' ')
+                            {
+                                keyStr = keyStickStr.substr(0,i);
+                                std::string stickStr = keyStickStr.substr(i+1);
+
+                                //separate left and right sticks
+                                for(long unsigned i = 0;i < stickStr.length();++i)
+                                {
+                                    if(stickStr[i] == ' ')
+                                    {
+                                        lStickStr = stickStr.substr(0,i);
+                                        rStickStr = stickStr.substr(i+1);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
+                //get keys
                 u64 keys = 0;
-                long unsigned int prev = 0;
-
-                for(long unsigned i = 0;i < keyStr.length();++i)
+                while(keyStr.find_last_of(";") != std::string::npos)
                 {
-                    if((templine[i] == '&'))
-                    {
-                        keys |= translateKey(templine.substr(prev,i));
-                        prev = i+1;
-                    }
-
-                    keys |= translateKey(templine.substr(i+1));
+                    std::size_t found = keyStr.find_last_of(";");
+                    std::string latestKey = keyStr.substr(found+1);
+                    keys |= translateKey(latestKey);
+                    keyStr.resize(found);
                 }
+                keys |= translateKey(keyStr);
 
-                //u64 keys = translateKey(keyStr);
+                //get left stick
+                /*s32 joy_l_x = 0;
+                s32 joy_l_y = 0;
+                while(lStickStr.find(";") != std::string::npos)
+                {
+                    std::size_t found = lStickStr.find(";");
+                    std::string l_x_pos = lStickStr.substr(0,found);
+                    joy_l_x = static_cast<s32>(std::stoi(l_x_pos));
+                    std::string l_y_pos = lStickStr.substr(found+1);
+                    joy_l_y = static_cast<s32>(std::stoi(l_y_pos));
+                }*/
+
+                //get right stick
+                /*s32 joy_r_x = 0;
+                s32 joy_r_y = 0;
+                while(rStickStr.find(";") != std::string::npos)
+                {
+                    std::size_t found = rStickStr.find(";");
+                    std::string r_x_pos = rStickStr.substr(0,found);
+                    joy_r_x = static_cast<s32>(std::stoi(r_x_pos));
+                    std::string r_y_pos = rStickStr.substr(found+1);
+                    joy_r_y = static_cast<s32>(std::stoi(r_y_pos));
+                }*/
+
+                //deposit found values into the script
                 int activeFrame = std::stoi(frameStr);
                 script[activeFrame].keys = keys;
+                //script[activeFrame].joy_l_x = joy_l_x;
+                //script[activeFrame].joy_l_y = joy_l_y;
+                //script[activeFrame].joy_r_x = joy_r_x;
+                //script[activeFrame].joy_r_y = joy_r_y;
             }
-
-            ++index;
         }
         ifs.close();
 

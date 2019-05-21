@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <cstddef>
 #include <switch.h>
 
 struct controlMsg
