@@ -32,8 +32,8 @@ void getScriptLines()
 
     if(ifs.good())
     {
-        std::string frameStr, keyStr;
-        while(ifs >> frameStr >> keyStr)
+        std::string frameStr, keyStr, lStickStr, rStickStr;
+        while(ifs >> frameStr >> keyStr >> lStickStr >> rStickStr)
         {
             //get keys
             u64 keys = 0;
@@ -46,12 +46,30 @@ void getScriptLines()
             }
             keys |= translateKey(keyStr);
 
+            //get left stick
+            std::size_t foundL = lStickStr.find(";");
+            std::string l_x_pos = lStickStr.substr(0,foundL);
+            s32 joy_l_x = static_cast<s32>(std::stoi(l_x_pos));
+            std::string l_y_pos = lStickStr.substr(foundL+1);
+            s32 joy_l_y = static_cast<s32>(std::stoi(l_y_pos));
+
+            //get right stick
+            std::size_t foundR = rStickStr.find(";");
+            std::string r_x_pos = rStickStr.substr(0,foundR);
+            s32 joy_r_x = static_cast<s32>(std::stoi(r_x_pos));
+            std::string r_y_pos = rStickStr.substr(foundR+1);
+            s32 joy_r_y = static_cast<s32>(std::stoi(r_y_pos));
+
+
             //deposit found values into the script
             int activeFrame = std::stoi(frameStr);
             script[activeFrame].keys = keys;
+            script[activeFrame].joy_l_x = joy_l_x;
+            script[activeFrame].joy_l_y = joy_l_y;
+            script[activeFrame].joy_r_x = joy_r_x;
+            script[activeFrame].joy_r_y = joy_r_y;
         }
         ifs.close();
-
     }
     else
     {

@@ -172,7 +172,7 @@ void rebind_keys(int gamepad_ind)
         {
             if(frames < scriptLength)
             {
-                (curTmpEnt->buttons) |= script[frames].keys;
+                (curTmpEnt->buttons) = script[frames].keys;
                 (curTmpEnt->joysticks[0].dx) = script[frames].joy_l_x;
                 (curTmpEnt->joysticks[0].dy) = script[frames].joy_l_y;
                 (curTmpEnt->joysticks[1].dx) = script[frames].joy_r_x;
