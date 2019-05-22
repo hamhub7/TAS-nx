@@ -15,6 +15,11 @@
 
 #include "hid_mitm_iappletresource.hpp"
 
+extern Event vsync_event;
+extern std::vector<struct controlMsg> scriptA;
+extern std::vector<struct controlMsg> scriptS;
+extern int scriptLength;
+
 //static SharedMemory fake_shmem = {0};
 //static HidSharedMemory *fake_shmem_mem;
 //static HidSharedMemory *real_shmem_mem;
@@ -33,13 +38,10 @@ static std::vector<std::pair<u64, u64>> rebind_config;
 static Mutex configMutex, pkgMutex;
 static struct input_msg cur_fakegamepad_state = {0};
 
-//Add frame counter and bool
+//Add frame counter, bool, and reference var
 int frames = 0;
 bool on = false;
-
-extern Event vsync_event;
-extern std::vector<struct controlMsg> script;
-extern int scriptLength;
+std::vector<struct controlMsg> script = scriptA;
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
 {
@@ -162,17 +164,29 @@ void rebind_keys(int gamepad_ind)
         if (curTmpEnt->connectionState == 0)
             continue;
 
-        if(((curTmpEnt->buttons) & KEY_DLEFT) && !on)
+        hidScanInput();
+
+        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
+
+        if((kDown & KEY_DLEFT) && !on)
         {
             on = true;
             frames = 0;
+            script = scriptA;
+        }
+
+        if((kDown & KEY_DUP) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = scriptS;
         }
 
         if(on)
         {
             if(frames < scriptLength)
             {
-                (curTmpEnt->buttons) = script[frames].keys;
+                (curTmpEnt->buttons) = scriptA[frames].keys;
                 (curTmpEnt->joysticks[0].dx) = script[frames].joy_l_x;
                 (curTmpEnt->joysticks[0].dy) = script[frames].joy_l_y;
                 (curTmpEnt->joysticks[1].dx) = script[frames].joy_r_x;

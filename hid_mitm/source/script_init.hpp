@@ -20,6 +20,6 @@ struct controlMsg
     s32 joy_r_y;
 };
 
-void getScriptLines();
+void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script);
 
 void initScript();

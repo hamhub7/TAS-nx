@@ -8,7 +8,8 @@
 #include "script_init.hpp"
 
 int scriptLength = 47;
-std::vector<struct controlMsg> script(scriptLength);
+std::vector<struct controlMsg> scriptA(scriptLength);
+std::vector<struct controlMsg> scriptS(scriptLength);
 
 extern FILE *file;
 
@@ -26,9 +27,9 @@ u64 translateKey(std::string str)
     return static_cast<u64>(0);
 }
 
-void getScriptLines()
+void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script)
 {
-    std::ifstream ifs("sdmc:/script.txt");
+    std::ifstream ifs(fileName);
 
     if(ifs.good())
     {
@@ -80,19 +81,24 @@ void getScriptLines()
 void initScript()
 {
     for(int i = 0; i < scriptLength; ++i)
-        script[i].keys = 0;
+    {
+        scriptA[i].keys = 0;
+        scriptA[i].joy_l_x = 0;
+        scriptA[i].joy_l_y = 0;
+        scriptA[i].joy_r_x = 0;
+        scriptA[i].joy_r_y = 0;
+    }
 
     for(int i = 0; i < scriptLength; ++i)
-        script[i].joy_l_x = 0;
+    {
+        scriptS[i].keys = 0;
+        scriptS[i].joy_l_x = 0;
+        scriptS[i].joy_l_y = 0;
+        scriptS[i].joy_r_x = 0;
+        scriptS[i].joy_r_y = 0;
+    }
 
-    for(int i = 0; i < scriptLength; ++i)
-        script[i].joy_l_y = 0;
-
-    for(int i = 0; i < scriptLength; ++i)
-        script[i].joy_r_x = 0;
-
-    for(int i = 0; i < scriptLength; ++i)
-        script[i].joy_r_y = 0;
-
-    getScriptLines();
+    //std::ifstream ifs("sdmc:/script.txt");
+    getScriptLines("sdmc:/scriptA.txt", scriptA);
+    getScriptLines("sdmc:/scriptS.txt", scriptS);
 }

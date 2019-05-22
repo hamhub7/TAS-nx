@@ -95,9 +95,9 @@ void __appInit(void) {
         fatalSimple(rc);
     __libnx_init_time();
 
-    //rc = hidInitialize();
-    //if (R_FAILED(rc))
-    //    fatalSimple(rc);
+    rc = hidInitialize();
+    if (R_FAILED(rc))
+        fatalSimple(rc);
     
     
     rc = socketInitialize(&sockInitConf);
