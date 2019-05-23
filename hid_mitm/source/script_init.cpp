@@ -1,17 +1,15 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
+#include <cstdarg>
 #include <string>
 #include <cstdlib>
 #include <switch.h>
 
 #include "script_init.hpp"
 
-int scriptLength = 47;
-std::vector<struct controlMsg> scriptA(scriptLength);
-std::vector<struct controlMsg> scriptS(scriptLength);
-
-extern FILE *file;
+std::vector<struct controlMsg> scriptA;
+std::vector<struct controlMsg> scriptS;
 
 std::string keyDef[] = {"KEY_A", "KEY_B", "KEY_X", "KEY_Y", "KEY_LSTICK", "KEY_RSTICK", "KEY_L", "KEY_R", "KEY_ZL", "KEY_ZR", "KEY_PLUS", "KEY_MINUS", "KEY_DLEFT", "KEY_DUP", "KEY_DRIGHT", "KEY_DDOWN"};
 
@@ -29,12 +27,17 @@ u64 translateKey(std::string str)
 
 void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script)
 {
-    std::ifstream ifs(fileName);
+    std::ifstream ifs;
+    ifs.open(fileName.c_str(), std::fstream::in);
 
-    if(ifs.good())
+    //log_to_sd_out(fileName.c_str());
+    //log_to_sd_out("\n");
+
+    if(ifs.is_open())
     {
-        std::string frameStr, keyStr, lStickStr, rStickStr;
-        while(ifs >> frameStr >> keyStr >> lStickStr >> rStickStr)
+        std::string keyStr, lStickStr, rStickStr;
+        int frame;
+        while(ifs >> frame >> keyStr >> lStickStr >> rStickStr)
         {
             //get keys
             u64 keys = 0;
@@ -63,14 +66,16 @@ void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script
 
 
             //deposit found values into the script
-            int activeFrame = std::stoi(frameStr);
-            script[activeFrame].keys = keys;
-            script[activeFrame].joy_l_x = joy_l_x;
-            script[activeFrame].joy_l_y = joy_l_y;
-            script[activeFrame].joy_r_x = joy_r_x;
-            script[activeFrame].joy_r_y = joy_r_y;
+            struct controlMsg tempMsg;
+            tempMsg.frame = frame;
+            tempMsg.keys = keys;
+            tempMsg.joy_l_x = joy_l_x;
+            tempMsg.joy_l_y = joy_l_y;
+            tempMsg.joy_r_x = joy_r_x;
+            tempMsg.joy_r_y = joy_r_y;
+
+            script.push_back(tempMsg);
         }
-        ifs.close();
     }
     else
     {
@@ -80,25 +85,6 @@ void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script
 
 void initScript()
 {
-    for(int i = 0; i < scriptLength; ++i)
-    {
-        scriptA[i].keys = 0;
-        scriptA[i].joy_l_x = 0;
-        scriptA[i].joy_l_y = 0;
-        scriptA[i].joy_r_x = 0;
-        scriptA[i].joy_r_y = 0;
-    }
-
-    for(int i = 0; i < scriptLength; ++i)
-    {
-        scriptS[i].keys = 0;
-        scriptS[i].joy_l_x = 0;
-        scriptS[i].joy_l_y = 0;
-        scriptS[i].joy_r_x = 0;
-        scriptS[i].joy_r_y = 0;
-    }
-
-    //std::ifstream ifs("sdmc:/script.txt");
     getScriptLines("sdmc:/scriptA.txt", scriptA);
     getScriptLines("sdmc:/scriptS.txt", scriptS);
 }

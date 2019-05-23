@@ -18,7 +18,6 @@
 extern Event vsync_event;
 extern std::vector<struct controlMsg> scriptA;
 extern std::vector<struct controlMsg> scriptS;
-extern int scriptLength;
 
 //static SharedMemory fake_shmem = {0};
 //static HidSharedMemory *fake_shmem_mem;
@@ -147,6 +146,24 @@ void clearConfig()
     mutexUnlock(&configMutex);
 }
 
+struct controlMsg getMsg(std::vector<struct controlMsg> script, int frame, int length)
+{
+    for(int i = 0;i < length;++i)
+    {
+        if(script[i].frame == frame)
+            return script[i];
+    }
+    struct controlMsg empty;
+    empty.frame = 0;
+    empty.keys = 0;
+    empty.joy_l_x = 0;
+    empty.joy_l_y = 0;
+    empty.joy_r_x = 0;
+    empty.joy_r_y = 0;
+
+    return empty;
+}
+
 void rebind_keys(int gamepad_ind)
 {
     if (tmp_shmem_mem.controllers[gamepad_ind].unk_1[0] == 0)
@@ -182,15 +199,18 @@ void rebind_keys(int gamepad_ind)
             script = scriptS;
         }
 
+        int scriptLength = script.back().frame + 1;
+
         if(on)
         {
             if(frames < scriptLength)
             {
-                (curTmpEnt->buttons) = scriptA[frames].keys;
-                (curTmpEnt->joysticks[0].dx) = script[frames].joy_l_x;
-                (curTmpEnt->joysticks[0].dy) = script[frames].joy_l_y;
-                (curTmpEnt->joysticks[1].dx) = script[frames].joy_r_x;
-                (curTmpEnt->joysticks[1].dy) = script[frames].joy_r_y;
+                struct controlMsg message = getMsg(script, frames, scriptLength);
+                (curTmpEnt->buttons) = message.keys;
+                (curTmpEnt->joysticks[0].dx) = message.joy_l_x;
+                (curTmpEnt->joysticks[0].dy) = message.joy_l_y;
+                (curTmpEnt->joysticks[1].dx) = message.joy_r_x;
+                (curTmpEnt->joysticks[1].dy) = message.joy_r_y;
             }
             else
             {

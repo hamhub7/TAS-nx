@@ -16,10 +16,12 @@
  
 #include <cstdlib>
 #include <cstdint>
+#include <cstdarg>
 #include <cstring>
 #include <malloc.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <iostream>
 
 #include <switch.h>
 #include <stratosphere.hpp>
@@ -31,7 +33,6 @@
 #include "script_init.hpp"
 
 Event vsync_event;
-FILE *file;
 
 extern "C" {
     extern u32 __start__;
@@ -61,8 +62,6 @@ void __libnx_initheap(void) {
 	fake_heap_end   = (char*)addr + size;
 }
 
-
-
 static const SocketInitConfig sockInitConf = {
     .bsdsockets_version = 1,
 
@@ -82,7 +81,6 @@ static const SocketInitConfig sockInitConf = {
     .bypass_nsd                         = false,
     .dns_timeout                        = 0,
 };
-
 
 void __appInit(void) {
     Result rc;
@@ -113,25 +111,15 @@ void __appExit(void) {
     timeExit();
 }
 
-/*
-void structStore()
+void log_to_sd(const char *fmt, ...) 
 {
-    struct input_msg msg_ZL;
-    msg_ZL.magic = INPUT_MSG_MAGIC;
-    msg_ZL.keys = KEY_ZL;
-    msg_ZL.joy_l_x = 0;
-    msg_ZL.joy_l_y = 0;
-    msg_ZL.joy_r_x = 0;
-    msg_ZL.joy_r_y = 0;
-
-    struct input_msg msg_Y;
-    msg_Y.magic = INPUT_MSG_MAGIC;
-    msg_Y.keys = KEY_Y;
-    msg_Y.joy_l_x = 0;
-    msg_Y.joy_l_y = 0;
-    msg_Y.joy_r_x = 0;
-    msg_Y.joy_r_y = 0;
-}*/
+    FILE* f = fopen("/sysmodule.log", "a");
+    va_list myargs;
+    va_start(myargs, fmt);
+    vfprintf(f, fmt, myargs);
+    va_end(myargs);
+    fclose(f);
+}
 
 struct HidManagerOptions {
     static const size_t PointerBufferSize = 0x100;
@@ -165,8 +153,7 @@ int main(int argc, char **argv)
     customHidInitialize();
     copyThreadInitialize();
 
-    file = fopen("sdmc:/debuglog.txt", "wt");
-    fprintf(file, "Opened\n");
+    log_to_sd("Started\n");
 
     initScript();
 

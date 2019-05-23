@@ -13,6 +13,7 @@
 struct controlMsg
 {
     // Joys between -32768 to 32767
+    int frame;
     u64 keys;
     s32 joy_l_x;
     s32 joy_l_y;
