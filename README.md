@@ -1,9 +1,11 @@
 # TAS-nx
 
-This program runs simple scripts from the root of the SD card and exectute the inputs at the press of a button
+This program runs simple scripts from the SD card and exectute the inputs at the press of a button
 
 Sample scripts are provided with the program
-To run a script, name the file "script.txt" and place it at the root of your SD card
+To add a script, place the script (modeled exactly like the ones in the examples) in the /scripts folder on your root. Name the script script[number].txt where [number] can range from 0-9 and has no brackets.
+To run the script, connect a USB keyboard to your docked switch and press the corresponding number key to activate the script.
+NOTE: sometimes the scripts like to drop the first input of the script, and this can sometimes case large desyncs. I recommend starting the script on frame 1 instead of frame 0.
 
 This program was forked from jakibaki's hid-mitm, and a huge thank you to him and the rest of the AtlasNX discord server for helping this program out
 

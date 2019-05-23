@@ -8,8 +8,16 @@
 
 #include "script_init.hpp"
 
-std::vector<struct controlMsg> scriptA;
-std::vector<struct controlMsg> scriptS;
+std::vector<struct controlMsg> script0;
+std::vector<struct controlMsg> script1;
+std::vector<struct controlMsg> script2;
+std::vector<struct controlMsg> script3;
+std::vector<struct controlMsg> script4;
+std::vector<struct controlMsg> script5;
+std::vector<struct controlMsg> script6;
+std::vector<struct controlMsg> script7;
+std::vector<struct controlMsg> script8;
+std::vector<struct controlMsg> script9;
 
 std::string keyDef[] = {"KEY_A", "KEY_B", "KEY_X", "KEY_Y", "KEY_LSTICK", "KEY_RSTICK", "KEY_L", "KEY_R", "KEY_ZL", "KEY_ZR", "KEY_PLUS", "KEY_MINUS", "KEY_DLEFT", "KEY_DUP", "KEY_DRIGHT", "KEY_DDOWN"};
 
@@ -23,6 +31,16 @@ u64 translateKey(std::string str)
         }
     }
     return static_cast<u64>(0);
+}
+
+void log_to_sd_out(const char *fmt, ...) 
+{
+    FILE* f = fopen("/output.log", "a");
+    va_list myargs;
+    va_start(myargs, fmt);
+    vfprintf(f, fmt, myargs);
+    va_end(myargs);
+    fclose(f);
 }
 
 void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script)
@@ -79,12 +97,27 @@ void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script
     }
     else
     {
-        fatalSimple(0x000f);
+        struct controlMsg empty;
+        empty.frame = 0;
+        empty.keys = 0;
+        empty.joy_l_x = 0;
+        empty.joy_l_y = 0;
+        empty.joy_r_x = 0;
+        empty.joy_r_y = 0;
+        script.push_back(empty);
     }
 }
 
 void initScript()
 {
-    getScriptLines("sdmc:/scriptA.txt", scriptA);
-    getScriptLines("sdmc:/scriptS.txt", scriptS);
+    getScriptLines("sdmc:/scripts/script0.txt", script0);
+    getScriptLines("sdmc:/scripts/script1.txt", script1);
+    getScriptLines("sdmc:/scripts/script2.txt", script2);
+    getScriptLines("sdmc:/scripts/script3.txt", script3);
+    getScriptLines("sdmc:/scripts/script4.txt", script4);
+    getScriptLines("sdmc:/scripts/script5.txt", script5);
+    getScriptLines("sdmc:/scripts/script6.txt", script6);
+    getScriptLines("sdmc:/scripts/script7.txt", script7);
+    getScriptLines("sdmc:/scripts/script8.txt", script8);
+    getScriptLines("sdmc:/scripts/script9.txt", script9);
 }

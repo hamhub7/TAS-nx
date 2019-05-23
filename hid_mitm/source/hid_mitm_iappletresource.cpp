@@ -16,8 +16,16 @@
 #include "hid_mitm_iappletresource.hpp"
 
 extern Event vsync_event;
-extern std::vector<struct controlMsg> scriptA;
-extern std::vector<struct controlMsg> scriptS;
+extern std::vector<struct controlMsg> script0;
+extern std::vector<struct controlMsg> script1;
+extern std::vector<struct controlMsg> script2;
+extern std::vector<struct controlMsg> script3;
+extern std::vector<struct controlMsg> script4;
+extern std::vector<struct controlMsg> script5;
+extern std::vector<struct controlMsg> script6;
+extern std::vector<struct controlMsg> script7;
+extern std::vector<struct controlMsg> script8;
+extern std::vector<struct controlMsg> script9;
 
 //static SharedMemory fake_shmem = {0};
 //static HidSharedMemory *fake_shmem_mem;
@@ -40,7 +48,7 @@ static struct input_msg cur_fakegamepad_state = {0};
 //Add frame counter, bool, and reference var
 int frames = 0;
 bool on = false;
-std::vector<struct controlMsg> script = scriptA;
+std::vector<struct controlMsg> script = script0;
 
 void add_shmem(u64 pid, SharedMemory *real_shmem, SharedMemory *fake_shmem)
 {
@@ -146,9 +154,9 @@ void clearConfig()
     mutexUnlock(&configMutex);
 }
 
-struct controlMsg getMsg(std::vector<struct controlMsg> script, int frame, int length)
+struct controlMsg getMsg(std::vector<struct controlMsg> script, int frame)
 {
-    for(int i = 0;i < length;++i)
+    for(long unsigned int i = 0;i < script.size();++i)
     {
         if(script[i].frame == frame)
             return script[i];
@@ -183,20 +191,74 @@ void rebind_keys(int gamepad_ind)
 
         hidScanInput();
 
-        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
-
-        if((kDown & KEY_DLEFT) && !on)
+        if(hidKeyboardDown(KBD_0) && !on)
         {
             on = true;
             frames = 0;
-            script = scriptA;
+            script = script0;
         }
 
-        if((kDown & KEY_DUP) && !on)
+        if(hidKeyboardDown(KBD_1) && !on)
         {
             on = true;
             frames = 0;
-            script = scriptS;
+            script = script1;
+        }
+
+        if(hidKeyboardDown(KBD_2) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script2;
+        }
+
+        if(hidKeyboardDown(KBD_3) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script3;
+        }
+
+        if(hidKeyboardDown(KBD_4) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script4;
+        }
+
+        if(hidKeyboardDown(KBD_5) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script5;
+        }
+
+        if(hidKeyboardDown(KBD_6) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script6;
+        }
+
+        if(hidKeyboardDown(KBD_7) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script7;
+        }
+
+        if(hidKeyboardDown(KBD_8) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script8;
+        }
+
+        if(hidKeyboardDown(KBD_9) && !on)
+        {
+            on = true;
+            frames = 0;
+            script = script9;
         }
 
         int scriptLength = script.back().frame + 1;
@@ -205,7 +267,7 @@ void rebind_keys(int gamepad_ind)
         {
             if(frames < scriptLength)
             {
-                struct controlMsg message = getMsg(script, frames, scriptLength);
+                struct controlMsg message = getMsg(script, frames);
                 (curTmpEnt->buttons) = message.keys;
                 (curTmpEnt->joysticks[0].dx) = message.joy_l_x;
                 (curTmpEnt->joysticks[0].dy) = message.joy_l_y;
