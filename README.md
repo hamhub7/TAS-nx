@@ -2,7 +2,7 @@
 
 This program runs simple scripts from the SD card and exectute the inputs at the press of a button
 
-Sample scripts are provided with the program
+Sample scripts are provided with the program. Refer to the /scripts directory in the source code to see them.
 To add a script, place the script (modeled exactly like the ones in the examples) in the /scripts folder on your root. Name the script script[number].txt where [number] can range from 0-9 and has no brackets.
 To run the script, connect a USB keyboard to your docked switch and press the corresponding number key to activate the script.
 NOTE: sometimes the scripts like to drop the first input of the script, and this can sometimes case large desyncs. I recommend starting the script on frame 1 instead of frame 0.
