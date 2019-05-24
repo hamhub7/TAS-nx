@@ -43,8 +43,10 @@ void log_to_sd_out(const char *fmt, ...)
     fclose(f);
 }
 
-void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script)
+std::vector<struct controlMsg> getScriptLines(std::string fileName)
 {
+    std::vector<struct controlMsg> script;
+
     std::ifstream ifs;
     ifs.open(fileName.c_str(), std::fstream::in);
 
@@ -97,27 +99,22 @@ void getScriptLines(std::string fileName, std::vector<struct controlMsg> &script
     }
     else
     {
-        struct controlMsg empty;
-        empty.frame = 0;
-        empty.keys = 0;
-        empty.joy_l_x = 0;
-        empty.joy_l_y = 0;
-        empty.joy_r_x = 0;
-        empty.joy_r_y = 0;
-        script.push_back(empty);
+        script.push_back(emptyMsg);
     }
+
+    return script;
 }
 
 void initScript()
 {
-    getScriptLines("sdmc:/scripts/script0.txt", script0);
-    getScriptLines("sdmc:/scripts/script1.txt", script1);
-    getScriptLines("sdmc:/scripts/script2.txt", script2);
-    getScriptLines("sdmc:/scripts/script3.txt", script3);
-    getScriptLines("sdmc:/scripts/script4.txt", script4);
-    getScriptLines("sdmc:/scripts/script5.txt", script5);
-    getScriptLines("sdmc:/scripts/script6.txt", script6);
-    getScriptLines("sdmc:/scripts/script7.txt", script7);
-    getScriptLines("sdmc:/scripts/script8.txt", script8);
-    getScriptLines("sdmc:/scripts/script9.txt", script9);
+    script0 = getScriptLines("sdmc:/scripts/script0.txt");
+    script1 = getScriptLines("sdmc:/scripts/script1.txt");
+    script2 = getScriptLines("sdmc:/scripts/script2.txt");
+    script3 = getScriptLines("sdmc:/scripts/script3.txt");
+    script4 = getScriptLines("sdmc:/scripts/script4.txt");
+    script5 = getScriptLines("sdmc:/scripts/script5.txt");
+    script6 = getScriptLines("sdmc:/scripts/script6.txt");
+    script7 = getScriptLines("sdmc:/scripts/script7.txt");
+    script8 = getScriptLines("sdmc:/scripts/script8.txt");
+    script9 = getScriptLines("sdmc:/scripts/script9.txt");
 }

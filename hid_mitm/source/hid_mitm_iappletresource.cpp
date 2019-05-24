@@ -12,7 +12,6 @@
 #include "hid_custom.h"
 #include "udp_input.h"
 #include "script_init.hpp"
-
 #include "hid_mitm_iappletresource.hpp"
 
 extern Event vsync_event;
@@ -155,21 +154,17 @@ void clearConfig()
 }
 
 struct controlMsg getMsg(std::vector<struct controlMsg> script, int frame)
-{
+{   
     for(long unsigned int i = 0;i < script.size();++i)
     {
         if(script[i].frame == frame)
+        {
             return script[i];
+            //return script.front();
+        }
     }
-    struct controlMsg empty;
-    empty.frame = 0;
-    empty.keys = 0;
-    empty.joy_l_x = 0;
-    empty.joy_l_y = 0;
-    empty.joy_r_x = 0;
-    empty.joy_r_y = 0;
 
-    return empty;
+    return emptyMsg;
 }
 
 void rebind_keys(int gamepad_ind)
@@ -193,72 +188,72 @@ void rebind_keys(int gamepad_ind)
 
         if(hidKeyboardDown(KBD_0) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script0.txt");
             on = true;
             frames = 0;
-            script = script0;
         }
 
         if(hidKeyboardDown(KBD_1) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script1.txt");
             on = true;
             frames = 0;
-            script = script1;
         }
 
         if(hidKeyboardDown(KBD_2) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script2.txt");
             on = true;
             frames = 0;
-            script = script2;
         }
 
         if(hidKeyboardDown(KBD_3) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script3.txt");
             on = true;
             frames = 0;
-            script = script3;
         }
 
         if(hidKeyboardDown(KBD_4) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script4.txt");
             on = true;
             frames = 0;
-            script = script4;
         }
 
         if(hidKeyboardDown(KBD_5) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script5.txt");
             on = true;
             frames = 0;
-            script = script5;
         }
 
         if(hidKeyboardDown(KBD_6) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script6.txt");
             on = true;
             frames = 0;
-            script = script6;
         }
 
         if(hidKeyboardDown(KBD_7) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script7.txt");
             on = true;
             frames = 0;
-            script = script7;
         }
 
         if(hidKeyboardDown(KBD_8) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script8.txt");
             on = true;
             frames = 0;
-            script = script8;
         }
 
         if(hidKeyboardDown(KBD_9) && !on)
         {
+            script = getScriptLines("sdmc:/scripts/script9.txt");
             on = true;
             frames = 0;
-            script = script9;
         }
 
         int scriptLength = script.back().frame + 1;
