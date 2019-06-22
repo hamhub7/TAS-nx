@@ -23,6 +23,4 @@ struct controlMsg
 
 std::vector<struct controlMsg> getScriptLines(std::string fileName);
 
-void initScript();
-
 const struct controlMsg emptyMsg = {0, 0, 0, 0, 0, 0};

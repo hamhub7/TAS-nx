@@ -153,16 +153,15 @@ void clearConfig()
     mutexUnlock(&configMutex);
 }
 
-struct controlMsg getMsg(std::vector<struct controlMsg> script, int frame)
+struct controlMsg getMsg(std::vector<struct controlMsg> &script, int frame)
 {   
-    for(long unsigned int i = 0;i < script.size();++i)
-    {
-        if(script[i].frame == frame)
+    //for(long unsigned int i = 0;i < script.size();++i)
+    //{
+        if(script.front().frame == frame)
         {
-            return script[i];
-            //return script.front();
+            return script.front();
         }
-    }
+    //}
 
     return emptyMsg;
 }
@@ -351,6 +350,9 @@ void net_thread(void* _)
         Result rc = eventWait(&vsync_event, 0xFFFFFFFFFFF);
         if(R_FAILED(rc))
             fatalSimple(rc);
+
+        if(!script.empty() && (script.front().frame == frames))
+            script.erase(script.begin());
 
         ++frames;
     }

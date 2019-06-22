@@ -104,17 +104,3 @@ std::vector<struct controlMsg> getScriptLines(std::string fileName)
 
     return script;
 }
-
-void initScript()
-{
-    script0 = getScriptLines("sdmc:/scripts/script0.txt");
-    script1 = getScriptLines("sdmc:/scripts/script1.txt");
-    script2 = getScriptLines("sdmc:/scripts/script2.txt");
-    script3 = getScriptLines("sdmc:/scripts/script3.txt");
-    script4 = getScriptLines("sdmc:/scripts/script4.txt");
-    script5 = getScriptLines("sdmc:/scripts/script5.txt");
-    script6 = getScriptLines("sdmc:/scripts/script6.txt");
-    script7 = getScriptLines("sdmc:/scripts/script7.txt");
-    script8 = getScriptLines("sdmc:/scripts/script8.txt");
-    script9 = getScriptLines("sdmc:/scripts/script9.txt");
-}

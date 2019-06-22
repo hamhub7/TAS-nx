@@ -155,8 +155,6 @@ int main(int argc, char **argv)
 
     //log_to_sd("Started\n");
 
-    //initScript();
-
     /* TODO: What's a good timeout value to use here? */
     auto server_manager = new HidMitmManager(1);
     

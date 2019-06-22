@@ -9,3 +9,4 @@ hid_mitm/input_pc_*
 hid_mitm/*.zip
 */.vscode/*
 .vscode/*
+tasks.txt

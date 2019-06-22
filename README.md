@@ -10,3 +10,5 @@ NOTE: sometimes the scripts like to drop the first input of the script, and this
 This program was forked from jakibaki's hid-mitm, and a huge thank you to him and the rest of the AtlasNX discord server for helping this program out
 
 For help or questions, join the SMO TAS discord (https://discord.gg/qeamCcV) or DM me on Discord (Hamhub7#5417)
+
+For easier script production, try Dethstroek's Script Maker: https://github.com/dethstroek/tas-nx-script-maker/
