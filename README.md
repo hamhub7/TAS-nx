@@ -12,3 +12,5 @@ This program was forked from jakibaki's hid-mitm, and a huge thank you to him an
 For help or questions, join the SMO TAS discord (https://discord.gg/qeamCcV) or DM me on Discord (Hamhub7#5417)
 
 For easier script production, try Dethstroek's Script Maker: https://github.com/dethstroek/tas-nx-script-maker/
+
+Donate to me on paypal at https://www.paypal.me/aaronhamhub if you are interested in supporting the process
