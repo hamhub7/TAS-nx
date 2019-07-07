@@ -155,14 +155,10 @@ void clearConfig()
 
 struct controlMsg getMsg(std::vector<struct controlMsg> &script, int frame)
 {   
-    //for(long unsigned int i = 0;i < script.size();++i)
-    //{
-        if(script.front().frame == frame)
-        {
-            return script.front();
-        }
-    //}
-
+    if(script.front().frame == frame)
+    {
+        return script.front();
+    }
     return emptyMsg;
 }
 
@@ -343,7 +339,7 @@ void shmem_copy(HidSharedMemory *source, HidSharedMemory *dest)
     }
 }
 
-void net_thread(void* _)
+void count_thread(void* _)
 {
     while(true)
     {
@@ -434,7 +430,7 @@ void copyThreadInitialize()
     threadCreate(&shmem_patch_thread, copy_thread, NULL, 0x1000, 0x21, 3);
     threadStart(&shmem_patch_thread);
 
-    threadCreate(&network_thread, net_thread, NULL, 0x1000, 0x30, 3);
+    threadCreate(&network_thread, count_thread, NULL, 0x1000, 0x30, 3);
     threadStart(&network_thread);
 }
 
